@@ -1,4 +1,4 @@
-import { test,firefox } from '@playwright/test';
+import { test,firefox,expect } from '@playwright/test';
 
 test('Context Fixture test', async ({ context }) => {
     //context fixture will create a new instance of the browser window with multiple pages parallel  
@@ -21,7 +21,6 @@ test('Context Fixture test', async ({ context }) => {
     page2.bringToFront();
     //playwright will automatically switch to the page that is being interacted with, so we don't need to manually switch to the page2 to interact with it.
 });
-
 
  test('Browser fixture Example', async ({ browser }) => {
     //browser fixture will create a new instance of the browser for each test and will not share the same browser instance with other tests. 
@@ -58,6 +57,35 @@ test("Custom Configurations", async ({}) => {
     await page.goto("https://the-internet-5chk.onrender.com/");
 
 });
+
+test('get request example', async ({ request }) => {
+
+    let baseURL = "https://the-internet-5chk.onrender.com/";
+    let endPoint = "/users";
+
+    let reponse = await request.get(`${baseURL}${endPoint}`);
+    
+    let actualStatusCode = reponse.status();
+    
+    expect(actualStatusCode).toBe(200);
+
+    let headers = reponse.headers();
+
+    let actualContentType = headers['content-type'];
+    expect(actualContentType).toContain("application/json");
+
+    let jsonResponse = await reponse.json();
+    expect(jsonResponse.name).toBe("John Doe");
+
+
+    //verify the address field 
+    
+
+
+
+    
+});
+
 
 
 
